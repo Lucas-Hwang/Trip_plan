@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import docx2txt; print\\('docx2txt available'\\)\")",
+      "Bash(python -c \"from docx import Document; print\\('python-docx available'\\)\")",
+      "Bash(python *)",
+      "Bash(python3 -c \"import PyPDF2; r=PyPDF2.PdfReader\\('doc/泰国7天6晚旅游.pdf'\\); print\\('\\\\n'.join\\(p.extract_text\\(\\) for p in r.pages[:3]\\)\\)\")",
+      "Bash(python3 -c \"import pdfplumber; pdf=pdfplumber.open\\('doc/泰国7天6晚旅游.pdf'\\); [print\\(p.extract_text\\(\\)\\) for p in pdf.pages[:3]]\")",
+      "Bash(pdftotext doc/泰国7天6晚旅游.pdf -)",
+      "Bash(pdfinfo doc/泰国7天6晚旅游.pdf)",
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/thai_pdf)",
+      "Bash(pdfimages -j \"doc/泰国7天6晚旅游.pdf\" /tmp/thai_pdf/page)",
+      "Bash(python3 -c \"import fitz; print\\('fitz ok'\\)\")",
+      "Bash(python3 -c \"import pdf2image; print\\('pdf2image ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const pdf=require\\('pdf-parse'\\); pdf\\(fs.readFileSync\\('doc/泰国7天6晚旅游.pdf'\\)\\).then\\(d=>console.log\\(d.text.substring\\(0,3000\\)\\)\\)\")",
+      "Bash(mutool draw *)",
+      "Bash(gs -sDEVICE=txtwrite -o - \"doc/泰国7天6晚旅游.pdf\")",
+      "Bash(pdftotext -layout doc/泰国7天6晚旅游.pdf -)",
+      "Bash(curl -sI \"https://cdn.jsdelivr.net/npm/y-webrtc@10.3.0/dist/y-webrtc.global.js\")",
+      "Bash(curl -s \"https://data.jsdelivr.com/v1/packages/npm/y-webrtc\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('\\\\n'.join\\(v['version'] for v in d.get\\('versions',[]\\)[:5]\\)\\)\")",
+      "WebFetch(domain:www.jsdelivr.com)",
+      "Bash(curl -s \"https://data.jsdelivr.com/v1/packages/npm/y-webrtc@10.3.0\")",
+      "Bash(npm pack *)",
+      "Bash(grep -E \" dist/|\\\\.js$\")",
+      "Bash(npm -v)",
+      "Bash(docker --version)",
+      "Bash(flutter --version)",
+      "Bash(npm install *)",
+      "Bash(nest new *)",
+      "Bash(docker-compose up *)",
+      "Bash(npx tsc *)",
+      "Bash(git *)",
+      "Bash(flutter create *)"
+    ]
+  }
+}

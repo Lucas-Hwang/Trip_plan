@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泰国曼谷 7天6晚 - 实时协作行程</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  [v-cloak] { display: none; }
+  .fade-enter-active, .fade-leave-active { transition: opacity .2s; }
+  .fade-enter-from, .fade-leave-to { opacity: 0; }
+  .slide-enter-active, .slide-leave-active { transition: all .25s ease; }
+  .slide-enter-from, .slide-leave-to { opacity: 0; transform: translateY(-8px); }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+</style>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#f97316',
+        secondary: '#0ea5e9',
+        accent: '#8b5cf6',
+        success: '#10b981',
+        warning: '#f59e0b',
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<div id="app" v-cloak class="min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-rose-500 text-white flex items-center justify-center font-bold text-lg">泰</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">泰国曼谷 7天6晚</h1>
+          <p class="text-xs text-slate-500">2025-05-06 ~ 05-12 · 4人同行</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+              :class="syncStatus==='connected' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'">
+          <span class="w-1.5 h-1.5 rounded-full" :class="syncStatus==='connected' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'"></span>
+          {{ syncStatus==='connected' ? '实时同步中' : '连接中...' }}
+        </span>
+        <button @click="showRoom = !showRoom" class="p-2 rounded-lg hover:bg-slate-100" title="房间设置">
+          <svg class="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <transition name="slide">
+      <div v-if="showRoom" class="border-b border-slate-200 bg-slate-50/80">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <div class="flex-1">
+            <label class="text-xs text-slate-500 font-medium">房间号（4人共享同一个即可同步）</label>
+            <div class="flex gap-2 mt-1">
+              <input v-model="roomInput" @keyup.enter="joinRoom" class="flex-1 px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="输入房间号">
+              <button @click="joinRoom" class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700">进入</button>
+            </div>
+          </div>
+          <div class="text-xs text-slate-500 sm:max-w-xs">
+            <p>当前房间：<span class="font-mono font-semibold text-slate-700">{{ roomId }}</span></p>
+            <p class="mt-0.5">在线人数：{{ peerCount }} 人</p>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <div class="max-w-5xl mx-auto px-4">
+      <nav class="flex gap-1 -mb-px overflow-x-auto">
+        <button v-for="t in tabs" :key="t.key" @click="tab = t.key"
+                class="px-4 py-2.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors"
+                :class="tab===t.key ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'">
+          {{ t.label }}
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto px-4 py-5">
+
+    <!-- 行程视图 -->
+    <section v-if="tab==='itinerary'" class="space-y-4">
+      <div v-for="(day, dIdx) in days" :key="day.date" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-center min-w-[3.5rem]">
+              <div class="text-xs text-slate-500">{{ day.weekday }}</div>
+              <div class="text-lg font-bold text-slate-800">{{ day.date.slice(5) }}</div>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-800">{{ day.title }}</h3>
+              <p class="text-xs text-slate-500">{{ doneCount(day) }}/{{ day.items.length }} 项已完成</p>
+            </div>
+          </div>
+          <button @click="addItem(dIdx)" class="px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg border border-primary/20">+ 添加</button>
+        </div>
+
+        <div class="divide-y divide-slate-100">
+          <div v-for="(item, iIdx) in day.items" :key="item.id" class="group px-4 py-3 flex items-start gap-3 hover:bg-slate-50/60 transition-colors">
+            <button @click="toggleDone(dIdx, iIdx)" class="mt-0.5 w-5 h-5 rounded border flex items-center justify-center transition"
+                    :class="item.done ? 'bg-success border-success text-white' : 'border-slate-300 text-transparent hover:border-primary'">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <span v-if="item.time" class="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">{{ item.time }}</span>
+                <span class="font-medium" :class="item.done ? 'text-slate-400 line-through' : 'text-slate-800'">{{ item.title }}</span>
+                <span class="text-xs px-1.5 py-0.5 rounded border" :class="typeStyle(item.type)">{{ typeLabel(item.type) }}</span>
+                <span v-if="item.cost" class="text-xs font-medium text-rose-600">¥{{ item.cost }}</span>
+              </div>
+              <p v-if="item.note" class="text-xs text-slate-500 mt-1">{{ item.note }}</p>
+
+              <!-- Inline edit -->
+              <div v-if="editing && editing.dayIdx===dIdx && editing.itemIdx===iIdx" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input v-model="editing.data.time" class="px-2.5 py-2 rounded-lg border border-slate-300 text-sm" placeholder="时间">
+                <input v-model="editing.data.title" class="px-2.5 py-2 rounded-lg border border-slate-300 text-sm" placeholder="标题">
+                <select v-model="editing.data.type" class="px-2.5 py-2 rounded-lg border border-slate-300 text-sm">
+                  <option v-for="opt in typeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+                </select>
+                <input v-model.number="editing.data.cost" type="number" class="px-2.5 py-2 rounded-lg border border-slate-300 text-sm" placeholder="预算">
+                <input v-model="editing.data.note" class="sm:col-span-2 px-2.5 py-2 rounded-lg border border-slate-300 text-sm" placeholder="备注">
+                <div class="sm:col-span-2 flex gap-2">
+                  <button @click="saveEdit" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-orange-600">保存</button>
+                  <button @click="editing=null" class="px-4 py-2 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-100">取消</button>
+                  <button @click="removeItem(dIdx, iIdx)" class="ml-auto px-4 py-2 text-rose-600 text-sm font-medium rounded-lg hover:bg-rose-50">删除</button>
+                </div>
+              </div>
+            </div>
+
+            <button v-if="!editing || editing.dayIdx!==dIdx || editing.itemIdx!==iIdx" @click="startEdit(dIdx, iIdx)" class="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 transition">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 清单视图 -->
+    <section v-if="tab==='checklist'" class="space-y-4">
+      <div class="flex flex-wrap gap-2">
+        <button v-for="f in checklistFilters" :key="f.key" @click="checklistFilter = f.key"
+                class="px-3 py-1.5 text-sm rounded-full border transition"
+                :class="checklistFilter===f.key ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'">
+          {{ f.label }}
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+          <h3 class="font-semibold text-slate-800 mb-3">行程事项</h3>
+          <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+            <div v-for="item in filteredChecklist" :key="item.id" class="flex items-start gap-2 p-2 rounded-lg hover:bg-slate-50">
+              <button @click="item.done = !item.done; updateYArray()" class="mt-0.5 w-4 h-4 rounded border flex items-center justify-center"
+                      :class="item.done ? 'bg-success border-success text-white' : 'border-slate-300 text-transparent'">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+              <div class="flex-1">
+                <div class="text-sm" :class="item.done ? 'text-slate-400 line-through' : 'text-slate-700'">{{ item.title }}</div>
+                <div class="text-xs text-slate-400">{{ item.dayLabel }} · {{ item.time || '全天' }}</div>
+              </div>
+            </div>
+            <div v-if="filteredChecklist.length===0" class="text-sm text-slate-400 py-6 text-center">暂无事项</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-slate-800">711 & 必买清单</h3>
+            <button @click="addShopItem" class="text-xs px-2 py-1 rounded border border-primary/30 text-primary hover:bg-primary/5">+ 添加</button>
+          </div>
+          <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+            <div v-for="(item, idx) in shoppingItems" :key="item.id" class="flex items-start gap-2 p-2 rounded-lg hover:bg-slate-50 group">
+              <button @click="toggleShopDone(idx)" class="mt-0.5 w-4 h-4 rounded border flex items-center justify-center"
+                      :class="item.done ? 'bg-success border-success text-white' : 'border-slate-300 text-transparent'">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+              <div class="flex-1">
+                <div v-if="shopEditing!==idx" class="text-sm" :class="item.done ? 'text-slate-400 line-through' : 'text-slate-700'">{{ item.title }}</div>
+                <input v-else v-model="item.title" @blur="shopEditing=null; updateYShopping()" @keyup.enter="shopEditing=null; updateYShopping()" class="w-full px-2 py-1 text-sm border border-slate-300 rounded">
+                <div class="text-xs text-slate-400">{{ typeLabel(item.type) }}</div>
+              </div>
+              <button @click="shopEditing = idx" class="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-slate-600">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 预算视图 -->
+    <section v-if="tab==='budget'" class="space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">总预算</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1">¥{{ totalBudget }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">人均预估</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1">¥{{ Math.round(totalBudget/4) }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">已完成花费</div>
+          <div class="text-2xl font-bold text-emerald-600 mt-1">¥{{ spentBudget }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">剩余预算</div>
+          <div class="text-2xl font-bold text-rose-600 mt-1">¥{{ totalBudget - spentBudget }}</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+        <h3 class="font-semibold text-slate-800 mb-4">分类统计</h3>
+        <div class="space-y-3">
+          <div v-for="cat in budgetCategories" :key="cat.key" class="flex items-center gap-3">
+            <div class="w-24 text-sm text-slate-600">{{ cat.label }}</div>
+            <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full" :style="{width: Math.min((cat.amount/Math.max(totalBudget,1))*100, 100)+'%', backgroundColor: cat.color}"></div>
+            </div>
+            <div class="w-16 text-right text-sm font-medium text-slate-700">¥{{ cat.amount }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast -->
+  <transition name="fade">
+    <div v-if="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 bg-slate-800 text-white text-sm rounded-full shadow-lg">
+      {{ toast }}
+    </div>
+  </transition>
+
+</div>
+
+<script type="module">
+import * as Y from 'https://esm.sh/yjs@13.6.18';
+import { WebrtcProvider } from 'https://esm.sh/y-webrtc@10.3.0';
+import { IndexeddbPersistence } from 'https://esm.sh/y-indexeddb@9.0.12';
+
+const { createApp, ref, computed, onMounted } = Vue;
+
+const defaultData = {
+  title: "泰国曼谷 7天6晚",
+  dates: "2025-05-06 ~ 2025-05-12",
+  travelers: 4,
+  days: [
+    {
+      date: "2025-05-06", weekday: "周二", title: "抵达曼谷",
+      items: [
+        { id: "d6-1", time: "全天", title: "抵达曼谷", type: "transport", cost: 0, done: false, note: "airport -> hotel" },
+        { id: "d6-2", time: "傍晚", title: "Baan Kuay Tiew Ruatong", type: "food", cost: 0, done: false, note: "船面" },
+        { id: "d6-3", time: "晚上", title: "Khiri Thai Tea / La Cabra Bakery", type: "food", cost: 0, done: false, note: "甜品/咖啡" },
+        { id: "d6-4", time: "晚上", title: "Phed Mark", type: "food", cost: 0, done: false, note: "打抛饭" },
+        { id: "d6-5", time: "晚上", title: "Puponfai / Mae Varee", type: "food", cost: 0, done: false, note: "外卖/芒果糯米饭" }
+      ]
+    },
+    {
+      date: "2025-05-07", weekday: "周三", title: "IconSiam + 美食日",
+      items: [
+        { id: "d7-1", time: "9:00", title: "Blue Flag 船/水上交通", type: "transport", cost: 150, done: false, note: "班次: 8:30 9:00 11:00 12:30 13:30 15:30 17:30" },
+        { id: "d7-2", time: "上午", title: "IconSiam", type: "sight", cost: 0, done: false, note: "9:00-18:30" },
+        { id: "d7-3", time: "午餐", title: "Kub Kao Kub Pla", type: "food", cost: 400, done: false, note: "B1, 泰式家常菜" },
+        { id: "d7-4", time: "下午", title: "Karun Thai Tea / Azabu Sabo", type: "food", cost: 300, done: false, note: "泰奶 / 抹茶冰淇淋" },
+        { id: "d7-5", time: "下午", title: "Mae Varee Mango Sticky Rice", type: "food", cost: 0, done: false, note: "" },
+        { id: "d7-6", time: "傍晚", title: "Soi Pratu Nok / Ruathong 一带逛吃", type: "sight", cost: 0, done: false, note: "" },
+        { id: "d7-7", time: "晚上", title: "Pungdet", type: "food", cost: 0, done: false, note: "烤面包" }
+      ]
+    },
+    {
+      date: "2025-05-08", weekday: "周四", title: "曼谷市区 + SPA",
+      items: [
+        { id: "d8-1", time: "上午", title: "市区闲逛", type: "sight", cost: 0, done: false, note: "" },
+        { id: "d8-2", time: "午餐", title: "Nok Restaurant", type: "food", cost: 0, done: false, note: "" },
+        { id: "d8-3", time: "下午", title: "SPA / 711", type: "relax", cost: 400, done: false, note: "预算约 400 RMB" },
+        { id: "d8-4", time: "晚上", title: "Glow Bloom / Khai Waan / Kebab / Shakers Restaurant", type: "food", cost: 0, done: false, note: "选一家吃" }
+      ]
+    },
+    {
+      date: "2025-05-09", weekday: "周五", title: "The Commune + 创意园区",
+      items: [
+        { id: "d9-1", time: "上午", title: "Nok Restaurant", type: "food", cost: 0, done: false, note: "" },
+        { id: "d9-2", time: "下午", title: "The Commune", type: "sight", cost: 0, done: false, note: "文创园区" },
+        { id: "d9-3", time: "晚上", title: "Glow Bloom", type: "food", cost: 0, done: false, note: "" }
+      ]
+    },
+    {
+      date: "2025-05-10", weekday: "周六", title: "复古市场 + 夜生活",
+      items: [
+        { id: "d10-1", time: "上午", title: "Toy-Tor-Toe", type: "food", cost: 0, done: false, note: "" },
+        { id: "d10-2", time: "下午", title: "NAKA Live / 市集", type: "sight", cost: 0, done: false, note: "" },
+        { id: "d10-3", time: "晚上", title: "Big C 采购", type: "shopping", cost: 0, done: false, note: "零食/伴手礼" }
+      ]
+    },
+    {
+      date: "2025-05-11", weekday: "周日", title: "待定活动",
+      items: [
+        { id: "d11-1", time: "10:00-11:00", title: "待定活动 A", type: "sight", cost: 1200, done: false, note: "预算 1200" },
+        { id: "d11-2", time: "17:30-18:00", title: "待定活动 B", type: "sight", cost: 0, done: false, note: "" }
+      ]
+    },
+    {
+      date: "2025-05-12", weekday: "周一", title: "按摩日 + 返程",
+      items: [
+        { id: "d12-1", time: "上午", title: "Premruetai Massage", type: "relax", cost: 120, done: false, note: "约 RMB 120" },
+        { id: "d12-2", time: "中午", title: "Orientala Spa", type: "relax", cost: 0, done: false, note: "" },
+        { id: "d12-3", time: "下午", title: "711 补货", type: "shopping", cost: 0, done: false, note: "" },
+        { id: "d12-4", time: "晚间", title: "返程", type: "transport", cost: 0, done: false, note: "" }
+      ]
+    }
+  ],
+  shopping: [
+    { id: "s1", title: "Mizumi Extra Moist", type: "skincare", done: false },
+    { id: "s2", title: "Bio Treatment", type: "skincare", done: false },
+    { id: "s3", title: "Clean Nose VC", type: "skincare", done: false },
+    { id: "s4", title: "Dove", type: "skincare", done: false },
+    { id: "s5", title: "Smooto", type: "skincare", done: false },
+    { id: "s6", title: "Koh-Kae 大哥花生豆", type: "snack", done: false },
+    { id: "s7", title: "Meiji 牛奶", type: "drink", done: false },
+    { id: "s8", title: "Ezygo", type: "snack", done: false },
+    { id: "s9", title: "Kunna", type: "snack", done: false },
+    { id: "s10", title: "Tasto 薯片", type: "snack", done: false },
+    { id: "s11", title: "Mama 泡面", type: "snack", done: false },
+    { id: "s12", title: "Joh O Chula Mama", type: "snack", done: false },
+    { id: "s13", title: "Pungdet", type: "snack", done: false },
+    { id: "s14", title: "Jae Wan (Lisa 甜品)", type: "food", done: false },
+    { id: "s15", title: "Cula 50 Kitchen", type: "food", done: false },
+    { id: "s16", title: "Elvis Suki", type: "food", done: false }
+  ]
+};
+
+const typeOptions = [
+  { value: "food", label: "美食", color: "#f97316" },
+  { value: "sight", label: "景点", color: "#0ea5e9" },
+  { value: "shopping", label: "购物", color: "#8b5cf6" },
+  { value: "relax", label: "放松", color: "#10b981" },
+  { value: "transport", label: "交通", color: "#64748b" },
+  { value: "skincare", label: "护肤", color: "#ec4899" },
+  { value: "snack", label: "零食", color: "#f59e0b" },
+  { value: "drink", label: "饮品", color: "#06b6d4" },
+];
+
+function genId() { return Math.random().toString(36).slice(2, 9); }
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function syncArrayToY(plainArr, yarr) {
+  yarr.delete(0, yarr.length);
+  for (const item of plainArr) {
+    if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
+      const ym = new Y.Map();
+      for (const [k, v] of Object.entries(item)) {
+        if (Array.isArray(v)) { const ya = new Y.Array(); syncArrayToY(v, ya); ym.set(k, ya); }
+        else if (typeof v === 'object' && v !== null) { const ym2 = new Y.Map(); syncMapToY(v, ym2); ym.set(k, ym2); }
+        else ym.set(k, v);
+      }
+      yarr.push([ym]);
+    } else {
+      yarr.push([item]);
+    }
+  }
+}
+
+function syncMapToY(plainObj, ymap) {
+  for (const key of ymap.keys()) ymap.delete(key);
+  for (const [k, v] of Object.entries(plainObj)) {
+    if (Array.isArray(v)) { const ya = new Y.Array(); syncArrayToY(v, ya); ymap.set(k, ya); }
+    else if (typeof v === 'object' && v !== null) { const ym2 = new Y.Map(); syncMapToY(v, ym2); ymap.set(k, ym2); }
+    else ymap.set(k, v);
+  }
+}
+
+function yMapToObject(ymap) {
+  const obj = {};
+  for (const [k, v] of ymap) {
+    if (v instanceof Y.Array) obj[k] = yArrayToArray(v);
+    else if (v instanceof Y.Map) obj[k] = yMapToObject(v);
+    else obj[k] = v;
+  }
+  return obj;
+}
+
+function yArrayToArray(yarr) {
+  const arr = [];
+  for (let i = 0; i < yarr.length; i++) {
+    const v = yarr.get(i);
+    if (v instanceof Y.Array) arr.push(yArrayToArray(v));
+    else if (v instanceof Y.Map) arr.push(yMapToObject(v));
+    else arr.push(v);
+  }
+  return arr;
+}
+
+const app = createApp({
+  setup() {
+    const tab = ref('itinerary');
+    const tabs = [
+      { key: 'itinerary', label: '行程' },
+      { key: 'checklist', label: '清单' },
+      { key: 'budget', label: '预算' },
+    ];
+
+    const days = ref(deepClone(defaultData.days));
+    const shoppingItems = ref(deepClone(defaultData.shopping));
+
+    const roomId = ref('thailand-trip-2025');
+    const roomInput = ref('thailand-trip-2025');
+    const showRoom = ref(false);
+    const syncStatus = ref('connecting');
+    const peerCount = ref(1);
+    const toast = ref('');
+
+    let ydoc = null;
+    let provider = null;
+    let indexeddbProvider = null;
+    let ydays = null;
+    let yshopping = null;
+
+    function showToast(msg) { toast.value = msg; setTimeout(() => toast.value = '', 2000); }
+
+    function typeLabel(type) { return typeOptions.find(o => o.value === type)?.label || type; }
+    function typeStyle(type) {
+      const map = {
+        food: 'bg-orange-50 text-orange-600 border-orange-100',
+        sight: 'bg-sky-50 text-sky-600 border-sky-100',
+        shopping: 'bg-violet-50 text-violet-600 border-violet-100',
+        relax: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+        transport: 'bg-slate-100 text-slate-600 border-slate-200',
+        skincare: 'bg-pink-50 text-pink-600 border-pink-100',
+        snack: 'bg-amber-50 text-amber-600 border-amber-100',
+        drink: 'bg-cyan-50 text-cyan-600 border-cyan-100',
+      };
+      return map[type] || 'bg-slate-100 text-slate-600 border-slate-200';
+    }
+
+    const editing = ref(null);
+    const shopEditing = ref(null);
+
+    function doneCount(day) {
+      return day.items.filter(i => i.done).length;
+    }
+
+    function startEdit(dIdx, iIdx) {
+      editing.value = { dayIdx: dIdx, itemIdx: iIdx, data: deepClone(days.value[dIdx].items[iIdx]) };
+    }
+    function saveEdit() {
+      if (!editing.value) return;
+      const { dayIdx, itemIdx, data } = editing.value;
+      days.value[dayIdx].items[itemIdx] = data;
+      editing.value = null;
+      updateYArray();
+    }
+    function removeItem(dIdx, iIdx) {
+      days.value[dIdx].items.splice(iIdx, 1);
+      editing.value = null;
+      updateYArray();
+    }
+    function addItem(dIdx) {
+      days.value[dIdx].items.push({ id: genId(), time: '', title: '新事项', type: 'sight', cost: 0, done: false, note: '' });
+      updateYArray();
+      setTimeout(() => startEdit(dIdx, days.value[dIdx].items.length - 1), 50);
+    }
+    function toggleDone(dIdx, iIdx) {
+      days.value[dIdx].items[iIdx].done = !days.value[dIdx].items[iIdx].done;
+      updateYArray();
+    }
+
+    function addShopItem() {
+      shoppingItems.value.push({ id: genId(), title: '新物品', type: 'snack', done: false });
+      updateYShopping();
+      shopEditing.value = shoppingItems.value.length - 1;
+    }
+    function toggleShopDone(idx) {
+      shoppingItems.value[idx].done = !shoppingItems.value[idx].done;
+      updateYShopping();
+    }
+
+    function updateYArray() {
+      if (!ydoc) return;
+      const arr = days.value.map(d => ({ ...d, items: d.items }));
+      syncArrayToY(arr, ydays);
+    }
+    function updateYShopping() {
+      if (!ydoc) return;
+      syncArrayToY(shoppingItems.value, yshopping);
+    }
+
+    const checklistFilter = ref('all');
+    const checklistFilters = [
+      { key: 'all', label: '全部' },
+      { key: 'food', label: '美食' },
+      { key: 'sight', label: '景点' },
+      { key: 'shopping', label: '购物' },
+      { key: 'relax', label: '放松' },
+      { key: 'transport', label: '交通' },
+    ];
+    const filteredChecklist = computed(() => {
+      const list = [];
+      days.value.forEach(day => {
+        day.items.forEach(item => {
+          if (checklistFilter.value === 'all' || item.type === checklistFilter.value) {
+            list.push({ ...item, dayLabel: day.date + ' ' + day.weekday });
+          }
+        });
+      });
+      return list;
+    });
+
+    const totalBudget = computed(() => {
+      let sum = 0;
+      days.value.forEach(d => d.items.forEach(i => sum += (Number(i.cost) || 0)));
+      return sum;
+    });
+    const spentBudget = computed(() => {
+      let sum = 0;
+      days.value.forEach(d => d.items.forEach(i => { if (i.done) sum += (Number(i.cost) || 0); }));
+      return sum;
+    });
+    const budgetCategories = computed(() => {
+      const cats = [
+        { key: 'food', label: '美食', color: '#f97316' },
+        { key: 'sight', label: '景点', color: '#0ea5e9' },
+        { key: 'shopping', label: '购物', color: '#8b5cf6' },
+        { key: 'relax', label: '放松', color: '#10b981' },
+        { key: 'transport', label: '交通', color: '#64748b' },
+      ];
+      cats.forEach(c => c.amount = 0);
+      days.value.forEach(d => d.items.forEach(i => {
+        const cat = cats.find(c => c.key === i.type);
+        if (cat) cat.amount += (Number(i.cost) || 0);
+      }));
+      return cats;
+    });
+
+    function initYjs(room) {
+      if (provider) { provider.destroy(); provider = null; }
+      if (indexeddbProvider) { indexeddbProvider.destroy(); indexeddbProvider = null; }
+      if (ydoc) { ydoc.destroy(); }
+
+      ydoc = new Y.Doc();
+      ydays = ydoc.getArray('days');
+      yshopping = ydoc.getArray('shopping');
+
+      ydays.observeDeep(() => {
+        const arr = yArrayToArray(ydays);
+        if (arr.length) days.value = arr;
+      });
+      yshopping.observeDeep(() => {
+        const arr = yArrayToArray(yshopping);
+        if (arr.length) shoppingItems.value = arr;
+      });
+
+      indexeddbProvider = new IndexeddbPersistence(room, ydoc);
+      indexeddbProvider.whenSynced.then(() => {
+        const d = yArrayToArray(ydays);
+        const s = yArrayToArray(yshopping);
+        if (d.length) days.value = d;
+        else updateYArray();
+        if (s.length) shoppingItems.value = s;
+        else updateYShopping();
+      });
+
+      provider = new WebrtcProvider(room, ydoc, {
+        signaling: ['wss://y-webrtc-signaling-eu.herokuapp.com', 'wss://y-webrtc-signaling-us.herokuapp.com'],
+        maxConns: 20,
+        filterBcConns: false,
+      });
+
+      provider.on('status', (event) => {
+        syncStatus.value = event.connected ? 'connected' : 'connecting';
+      });
+
+      provider.awareness.on('change', () => {
+        peerCount.value = provider.awareness.getStates().size;
+      });
+    }
+
+    function joinRoom() {
+      if (!roomInput.value.trim()) return;
+      roomId.value = roomInput.value.trim();
+      initYjs(roomId.value);
+      showToast('已加入房间: ' + roomId.value);
+      showRoom.value = false;
+    }
+
+    onMounted(() => {
+      initYjs(roomId.value);
+    });
+
+    return {
+      tab, tabs,
+      days, shoppingItems,
+      typeOptions, typeLabel, typeStyle, doneCount,
+      editing, startEdit, saveEdit, removeItem, addItem, toggleDone,
+      shopEditing, addShopItem, toggleShopDone,
+      updateYArray, updateYShopping,
+      checklistFilter, checklistFilters, filteredChecklist,
+      totalBudget, spentBudget, budgetCategories,
+      roomId, roomInput, showRoom, joinRoom,
+      syncStatus, peerCount,
+      toast,
+    };
+  }
+});
+
+app.mount('#app');
+</script>
+</body>
+</html>

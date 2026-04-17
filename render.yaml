@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: thailand-trip-api
+    runtime: node
+    region: singapore
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        fromDatabase:
+          name: thailand-trip-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: thailand-trip-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: thailand-trip-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: thailand-trip-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: thailand-trip-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/health
+
+databases:
+  - name: thailand-trip-db
+    region: singapore
+    plan: free
+    ipAllowList: []

@@ -1,0 +1,118 @@
+{
+  "title": "泰国曼谷 7天6晚",
+  "dates": "2025-05-06 ~ 2025-05-12",
+  "travelers": 4,
+  "currency": "CNY",
+  "notes": "APP: Google Maps / Grab / Bolt / QueQ / PanwaBuriRak",
+  "hotel": "Elegant Hotel Access (或待定)",
+  "days": [
+    {
+      "date": "2025-05-06",
+      "weekday": "周二",
+      "title": "抵达曼谷",
+      "items": [
+        { "id": "d6-1", "time": "全天", "title": "抵达曼谷", "type": "transport", "cost": 0, "done": false, "note": " airport -> hotel" },
+        { "id": "d6-2", "time": "傍晚", "title": "Baan Kuay Tiew Ruatong (ก๋วยเตี๋ยวเรือทอง)", "type": "food", "cost": 0, "done": false, "note": "船面" },
+        { "id": "d6-3", "time": "晚上", "title": "Khiri Thai Tea / La Cabra Bakery", "type": "food", "cost": 0, "done": false, "note": "甜品/咖啡" },
+        { "id": "d6-4", "time": "晚上", "title": "Phed Mark", "type": "food", "cost": 0, "done": false, "note": "打抛饭" },
+        { "id": "d6-5", "time": "晚上", "title": "Puponfai / Mae Varee", "type": "food", "cost": 0, "done": false, "note": "外卖/芒果糯米饭" }
+      ]
+    },
+    {
+      "date": "2025-05-07",
+      "weekday": "周三",
+      "title": "IconSiam + 美食日",
+      "items": [
+        { "id": "d7-1", "time": "9:00", "title": "Blue Flag 船/水上交通", "type": "transport", "cost": 150, "done": false, "note": "班次: 8:30 9:00 11:00 12:30 13:30 15:30 17:30" },
+        { "id": "d7-2", "time": "上午", "title": "IconSiam", "type": "sight", "cost": 0, "done": false, "note": "9:00-18:30" },
+        { "id": "d7-3", "time": "午餐", "title": "Kub Kao Kub Pla (กับข้าวกับปลา)", "type": "food", "cost": 400, "done": false, "note": "B1, 泰式家常菜" },
+        { "id": "d7-4", "time": "下午", "title": "Karun Thai Tea / Azabu Sabo", "type": "food", "cost": 300, "done": false, "note": "泰奶 / 抹茶冰淇淋" },
+        { "id": "d7-5", "time": "下午", "title": "Mae Varee Mango Sticky Rice", "type": "food", "cost": 0, "done": false, "note": "" },
+        { "id": "d7-6", "time": "傍晚", "title": "Soi Pratu Nok / Ruathong 一带逛吃", "type": "sight", "cost": 0, "done": false, "note": "" },
+        { "id": "d7-7", "time": "晚上", "title": "Pungdet (ปังเด็ด)", "type": "food", "cost": 0, "done": false, "note": "烤面包" }
+      ]
+    },
+    {
+      "date": "2025-05-08",
+      "weekday": "周四",
+      "title": "曼谷市区 + SPA",
+      "items": [
+        { "id": "d8-1", "time": "上午", "title": "市区闲逛", "type": "sight", "cost": 0, "done": false, "note": "" },
+        { "id": "d8-2", "time": "午餐", "title": "Nok Restaurant", "type": "food", "cost": 0, "done": false, "note": "" },
+        { "id": "d8-3", "time": "下午", "title": "SPA / 711", "type": "relax", "cost": 400, "done": false, "note": "预算约 400 RMB" },
+        { "id": "d8-4", "time": "晚上", "title": "Glow Bloom / Khai Waan / Kebab / Shakers Restaurant", "type": "food", "cost": 0, "done": false, "note": "选一家吃" }
+      ]
+    },
+    {
+      "date": "2025-05-09",
+      "weekday": "周五",
+      "title": "The Commune + 创意园区",
+      "items": [
+        { "id": "d9-1", "time": "上午", "title": "Nok Restaurant", "type": "food", "cost": 0, "done": false, "note": "" },
+        { "id": "d9-2", "time": "下午", "title": "The Commune", "type": "sight", "cost": 0, "done": false, "note": "文创园区" },
+        { "id": "d9-3", "time": "晚上", "title": "Glow Bloom", "type": "food", "cost": 0, "done": false, "note": "" }
+      ]
+    },
+    {
+      "date": "2025-05-10",
+      "weekday": "周六",
+      "title": "复古市场 + 夜生活",
+      "items": [
+        { "id": "d10-1", "time": "上午", "title": "Toy-Tor-Toe", "type": "food", "cost": 0, "done": false, "note": "" },
+        { "id": "d10-2", "time": "下午", "title": "NAKA Live / 市集", "type": "sight", "cost": 0, "done": false, "note": "" },
+        { "id": "d10-3", "time": "晚上", "title": "Big C 采购", "type": "shopping", "cost": 0, "done": false, "note": "零食/伴手礼" }
+      ]
+    },
+    {
+      "date": "2025-05-11",
+      "weekday": "周日",
+      "title": "待定活动",
+      "items": [
+        { "id": "d11-1", "time": "10:00-11:00", "title": "待定活动 A", "type": "sight", "cost": 1200, "done": false, "note": "预算 1200" },
+        { "id": "d11-2", "time": "17:30-18:00", "title": "待定活动 B", "type": "sight", "cost": 0, "done": false, "note": "" }
+      ]
+    },
+    {
+      "date": "2025-05-12",
+      "weekday": "周一",
+      "title": "按摩日 + 返程",
+      "items": [
+        { "id": "d12-1", "time": "上午", "title": "Premruetai Massage", "type": "relax", "cost": 120, "done": false, "note": "约 RMB 120" },
+        { "id": "d12-2", "time": "中午", "title": "Orientala Spa", "type": "relax", "cost": 0, "done": false, "note": "" },
+        { "id": "d12-3", "time": "下午", "title": "711 补货", "type": "shopping", "cost": 0, "done": false, "note": "" },
+        { "id": "d12-4", "time": "晚间", "title": "返程", "type": "transport", "cost": 0, "done": false, "note": "" }
+      ]
+    }
+  ],
+  "shopping": {
+    "711": [
+      { "id": "s1", "title": "Mizumi Extra Moist", "type": "skincare", "done": false },
+      { "id": "s2", "title": "Bio Treatment", "type": "skincare", "done": false },
+      { "id": "s3", "title": "Clean Nose VC", "type": "skincare", "done": false },
+      { "id": "s4", "title": "Dove 护发/护肤", "type": "skincare", "done": false },
+      { "id": "s5", "title": "Smooto", "type": "skincare", "done": false },
+      { "id": "s6", "title": "Koh-Kae 大哥花生豆", "type": "snack", "done": false },
+      { "id": "s7", "title": "Meiji 牛奶", "type": "drink", "done": false },
+      { "id": "s8", "title": "Ezygo", "type": "snack", "done": false },
+      { "id": "s9", "title": "Kunna", "type": "snack", "done": false },
+      { "id": "s10", "title": "Tasto 薯片", "type": "snack", "done": false },
+      { "id": "s11", "title": "Mama 泡面", "type": "snack", "done": false },
+      { "id": "s12", "title": "Joh O Chula Mama (泡面?)", "type": "snack", "done": false },
+      { "id": "s13", "title": "Pungdet", "type": "snack", "done": false },
+      { "id": "s14", "title": "Jae Wan (Lisa 甜品)", "type": "food", "done": false },
+      { "id": "s15", "title": "Cula 50 Kitchen", "type": "food", "done": false },
+      { "id": "s16", "title": "Elvis Suki", "type": "food", "done": false }
+    ]
+  },
+  "budget": {
+    "totalEstimate": 4720,
+    "perPerson": 0,
+    "categories": {
+      "transport": 0,
+      "food": 0,
+      "sight": 0,
+      "shopping": 0,
+      "relax": 0
+    }
+  }
+}
